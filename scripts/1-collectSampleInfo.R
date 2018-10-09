@@ -30,7 +30,8 @@ ov_cell_line_file_data <-
     mutate(targetd_seq_pod_location = file.path(pgdx_613_658_targeted_dir,
                                                 paste0("t_", PGDx.ID, "_Cp.bam"))) %>%
     ### Should find out if this is CpPa or something different
-    mutate(type = "ovarian", targeted_panel = "Cp")
+    mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA)
+saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
 ### Need panel of healthys that were done using same targeted sequencing
 ### Need WGS 
     
