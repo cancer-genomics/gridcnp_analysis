@@ -8,6 +8,7 @@
 ##### We will have 3 .csv files: Ovarian cell lines, colorectal cancer (used in TEC-Seq paper), and TCGA
 
 library(readxl)
+library(tidyverse)
 library(dplyr)
 
 #### First Ovarian cell line data
@@ -31,6 +32,21 @@ ov_cell_line_file_data <-
                                                 paste0("t_", PGDx.ID, "_Cp.bam"))) %>%
     ### Should find out if this is CpPa or something different
     mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA)
+if(FALSE){
+  ## Find path to bin-level data for above samples on cluster
+  library(ovarian.manuscript)
+  data(ovarian_ids)
+  write_csv(ovarian_ids, "../data/ovarian_cell_line_manuscript.csv")
+}
+ovarian_ids <- read_csv("../data/ovarian_cell_line_manuscript.csv")
+wgs.info <- ovarian_ids %>%
+  right_join(ov_cell_line_file_data, by=c("alternative_id"="Lab.ID")) %>%
+  mutate(bindir="/dcl01/scharpf/data/rscharpf/projects/OvarianCellLines/preprocess/3background_adj",
+         wgs_bin_loc=file.path(bindir, paste0(alternative_id, ".bam.rds")))
+stopifnot(identical(wgs.info$alternative_id, ov_cell_line_file_data$Lab.ID))
+ov_cell_line_file_data <- ov_cell_line_file_data %>%
+  mutate(wgs_bin_loc=wgs.info$wgs_bin_loc) %>%
+  filter(file.exists(wgs_bin_loc))  ## drops one sample
 saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
 write.csv(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.csv"))
 ### Need panel of healthys that were done using same targeted sequencing
