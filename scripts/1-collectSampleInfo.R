@@ -28,30 +28,25 @@ ov_cell_line_file_data <-
     ov_cl_cp_seq %>%
     select(Lab.ID, PGDx.ID, Genome.Build) %>%
     filter(grepl("^PGDX6.*", PGDx.ID)) %>%
-    mutate(targeted_seq_pod_location = file.path(pgdx_613_658_targeted_dir,
+    mutate(targetd_seq_pod_location = file.path(pgdx_613_658_targeted_dir,
                                                 paste0("t_", PGDx.ID, "_Cp.bam"))) %>%
     ### Should find out if this is CpPa or something different
-<<<<<<< HEAD
-    mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA) %>%
-    mutate(cluster_targeted_location = "/dcl01/scharpf1/data/bams/gridcnp_analysis/ov_cell_lines")
-=======
     mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA)
 if(FALSE){
-  ## Find path to bin-level data for above samples on cluster
-  library(ovarian.manuscript)
-  data(ovarian_ids)
-  write_csv(ovarian_ids, "../data/ovarian_cell_line_manuscript.csv")
+    ## Find path to bin-level data for above samples on cluster
+    library(ovarian.manuscript)
+    data(ovarian_ids)
+    write_csv(ovarian_ids, "../data/ovarian_cell_line_manuscript.csv")
 }
 ovarian_ids <- read_csv("../data/ovarian_cell_line_manuscript.csv")
 wgs.info <- ovarian_ids %>%
-  right_join(ov_cell_line_file_data, by=c("alternative_id"="Lab.ID")) %>%
-  mutate(bindir="/dcl01/scharpf/data/rscharpf/projects/OvarianCellLines/preprocess/3background_adj",
-         wgs_bin_loc=file.path(bindir, paste0(alternative_id, ".bam.rds")))
+    right_join(ov_cell_line_file_data, by=c("alternative_id"="Lab.ID")) %>%
+    mutate(bindir="/dcl01/scharpf/data/rscharpf/projects/OvarianCellLines/preprocess/3background_adj",
+           wgs_bin_loc=file.path(bindir, paste0(alternative_id, ".bam.rds")))
 stopifnot(identical(wgs.info$alternative_id, ov_cell_line_file_data$Lab.ID))
 ov_cell_line_file_data <- ov_cell_line_file_data %>%
-  mutate(wgs_bin_loc=wgs.info$wgs_bin_loc) %>%
-  filter(file.exists(wgs_bin_loc))  ## drops one sample
->>>>>>> 1a7121150e4ec3954398db2179e5660844f6b464
+    mutate(wgs_bin_loc=wgs.info$wgs_bin_loc) %>%
+    filter(file.exists(wgs_bin_loc))  ## drops one sample
 saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
 write.csv(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.csv"))
 ### Need panel of healthys that were done using same targeted sequencing
@@ -80,6 +75,3 @@ crc.sample.info <-
     mutate(wgs_normal_cluster_location = file.path(normal.wgs.dir, paste0(pgdxid, "N_WGS_eland_sortednofa.bam"))) %>%
     mutate(cluster_targeted_location = cluster.targeted.dir)
 write.csv(crc.sample.info, "../data/crc_sample_info.csv")
-
-##############################################
-    
