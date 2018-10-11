@@ -27,10 +27,11 @@ ov_cell_line_file_data <-
     ov_cl_cp_seq %>%
     select(Lab.ID, PGDx.ID, Genome.Build) %>%
     filter(grepl("^PGDX6.*", PGDx.ID)) %>%
-    mutate(targetd_seq_pod_location = file.path(pgdx_613_658_targeted_dir,
+    mutate(targeted_seq_pod_location = file.path(pgdx_613_658_targeted_dir,
                                                 paste0("t_", PGDx.ID, "_Cp.bam"))) %>%
     ### Should find out if this is CpPa or something different
-    mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA)
+    mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA) %>%
+    mutate(cluster_targeted_location = "/dcl01/scharpf1/data/bams/gridcnp_analysis/ov_cell_lines")
 saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
 write.csv(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.csv"))
 ### Need panel of healthys that were done using same targeted sequencing
