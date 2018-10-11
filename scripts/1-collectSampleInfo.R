@@ -22,7 +22,7 @@ ov_master_data <-
 ov_cl_cp_seq <- inner_join(ov_cl_cp_seq, ov_master_data)
 #### Now directory for certain PGDXids
 #### Do blackslashes show up?
-pgdx_613_658_targeted_dir <- "//10.113.118.248/data1/Data\ from\ PGDx/Ovarian/PGDX607-658\ and\ 1449"
+pgdx_613_658_targeted_dir <- "//10.113.118.248/data1/Data\\ from\\ PGDx/Ovarian/PGDX607-658\\ and\\ 1449"
 ov_cell_line_file_data <-
     ov_cl_cp_seq %>%
     select(Lab.ID, PGDx.ID, Genome.Build) %>%
@@ -32,6 +32,33 @@ ov_cell_line_file_data <-
     ### Should find out if this is CpPa or something different
     mutate(type = "ovarian", targeted_panel = "Cp", wgs_bin_loc = NA)
 saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
+write.csv(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.csv"))
 ### Need panel of healthys that were done using same targeted sequencing
 ### Need WGS 
+
+##############################################
+### CRC samples
+crc.sample.info <- read_excel("../data/091118_Cancer_Cases_with_Matched_T_N_P_WGS_and_Targeted_Seq.xlsx")
+crc.targeted.dir <- "//10.113.118.248/data2/Phallen_et_al_EGA/"
+crc.wgs.dir <- "/dcl01/scharpf1/data/bams/colorectal/tissue/wholegenome"
+normal.wgs.dir <- "/dcl01/scharpf1/data/bams/healthy/tissue/wholegenome"
+cluster.targeted.dir <- "/dcl01/scharpf1/data/bams/gridcnp_analysis/vv_crc"
+### Remove first row (merged cells) and select only CRC cases
+crc.sample.info <-
+    crc.sample.info[-1,] %>%
+    filter(`Patient Type` == "CRC") %>%
+    select(Patient, `Patient Type`, Stage, starts_with("Copy"), starts_with("Fold"),
+           X__1) %>%
+    setNames(tolower(names(.))) %>%
+    rename(labid = patient, cancer_type = `patient type`, cnv_genes = starts_with("copy"),
+           cnv_fold = starts_with("fold"), pgdxid = x__1) %>%
+    mutate(pgdxid = gsub("P$", "", pgdxid)) %>%
+    mutate(targeted_tumor_pod_location = paste0(crc.targeted.dir, paste0("t_", pgdxid, "T_CpPa.bam"))) %>%
+    mutate(targeted_normal_pod_location = gsub("/t_", "/n_", targeted_tumor_pod_location)) %>%
+    mutate(wgs_tumor_cluster_location = file.path(crc.wgs.dir, paste0(pgdxid, "T_WGS_eland_sortednofa.bam"))) %>%
+    mutate(wgs_normal_cluster_location = file.path(normal.wgs.dir, paste0(pgdxid, "N_WGS_eland_sortednofa.bam"))) %>%
+    mutate(cluster_targeted_location = cluster.targeted.dir)
+write.csv(crc.sample.info, "../data/crc_sample_info.csv")
+
+##############################################
     
