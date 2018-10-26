@@ -9,7 +9,6 @@
 
 library(readxl)
 library(tidyverse)
-library(dplyr)
 
 #### First Ovarian cell line data
 #### Will read in data from Rob w/ lab IDs, then use master data to match that to PGDX IDs 
@@ -44,7 +43,8 @@ wgs.info <- ovarian_ids %>%
     mutate(bindir="/dcl01/scharpf/data/rscharpf/projects/OvarianCellLines/preprocess/3background_adj",
            wgs_bin_loc=file.path(bindir, paste0(alternative_id, ".bam.rds")))
 stopifnot(identical(wgs.info$alternative_id, ov_cell_line_file_data$Lab.ID))
-ov_cell_line_file_data <- ov_cell_line_file_data %>%
+ov_cell_line_file_data <-
+    ov_cell_line_file_data %>%
     mutate(wgs_bin_loc=wgs.info$wgs_bin_loc) %>%
     filter(file.exists(wgs_bin_loc))  ## drops one sample
 saveRDS(ov_cell_line_file_data, file.path("..", "data", "ov_cell_line_info.rds"))
