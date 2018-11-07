@@ -8,18 +8,19 @@
 
 WD=$PWD
 
-bamdir=/dcl01/scharpf1/data/bams/gridcnp_analysis/ov_cell_lines/preprocessed_bams
+bamdir=/dcl01/scharpf1/data/bams/gridcnp_analysis/vv_crc/preprocessed_bams
 cd $bamdir
-tumor=$(ls -1v *processed.bam | head -n $SGE_TASK_ID | tail -n 1)
+tumor=$(ls -1v t*processed.bam | head -n $SGE_TASK_ID | tail -n 1)
+normal=n${tumor:1}
 cd $WD
-output_dir=/dcl01/scharpf1/data/gridcnp_analysis/ov_cell_lines/snps
+output_dir=/dcl01/scharpf1/data/gridcnp_analysis/vv_crc/snps
 mkdir -p $output_dir
 sample=${tumor%.bam}
 output_file=$output_dir/$sample.LOH.tsv
 
 Rscript make-snp-table.R \
-        -n NULL \
+        -n $bamdir/$normal \
         -t $bamdir/$tumor \
-        -c /dcl01/scharpf1/data/probe_sets/probe_bed_files/Cp_reduced_hg18.bed \
+        -c /dcl01/scharpf1/data/probe_sets/probe_bed_files/CpPa2_reduced_hg19.bed \
         -a hg19 \
         -o $output_file

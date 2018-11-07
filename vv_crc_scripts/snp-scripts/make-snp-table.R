@@ -16,7 +16,7 @@ data(dbsnp150_snps, package = package)
 capture = read.table(opts$capture, header = FALSE, sep = '\t', stringsAsFactor = FALSE)
 capture.ranges = GRanges(seqnames = capture[,1], ranges = IRanges(capture[,2], capture[,3]))
 
-snps = svAF(normalBam = ops$normal,
+snps = svAF(normalBam = opts$normal,
             tumorBam = opts$tumor,
             genome = opts$assembly,
             n = length(dbsnp150_snps),
