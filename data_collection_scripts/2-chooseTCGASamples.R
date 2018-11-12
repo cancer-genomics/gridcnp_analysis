@@ -28,7 +28,10 @@ tcga.merged <-
     arrange(type) 
 
 ### Subset to ovarian, as these are the most common type
-ovarian <- filter(tcga.merged, type == "OV")
+ovarian <-
+    filter(tcga.merged, type == "OV") %>%
+    select(-tcga_id) %>%
+    mutate_if(is.factor, as.character)
 
 ### Save date
 write.csv(ovarian, "../data/potential_tcga_ovarian_samples.csv", row.names = FALSE)
