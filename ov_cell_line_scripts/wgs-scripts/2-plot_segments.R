@@ -57,17 +57,18 @@ cns <- data.frame(chromosome = as.character(seqnames(cns)),
                   start = start(ranges(cns)),  
                   end = end(ranges(cns)),  
                   log2 = cns$seg.mean)
+
 cns$chromosome <- factor(cns$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX"))
 
 #purity <- "N/A"
 sample <- str_extract(seg.file, "PGDX[0-9]{1,}T")
-cnr <- cnr[seq(1, nrow(cnr), by = 10),]
+#cnr <- cnr[seq(1, nrow(cnr), by = 10),]
 
 p <-
     ggplot() + 
     geom_point(data = cnr, 
                aes(x = (start+end)/2, y = log2), 
-               alpha = 0.4, size = 0.3, color = "grey") +
+               alpha = 0.1, size = 0.2, color = "grey66") +
     geom_segment(data = cns, 
                  aes(x = start, xend = end, y = log2, yend = log2), 
                  color = "black") +

@@ -1,0 +1,14 @@
+"TCGA.ID","Tumor.Type","Capture.Kit","Sequencing.Date","normal.id","tumor.type","is.messy","dup"
+"TCGA-28-5211","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-08-29","TCGA-28-5211-10B","GBM",FALSE,FALSE
+"TCGA-76-6660","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-08-29","TCGA-76-6660-10A","GBM",FALSE,FALSE
+"TCGA-19-5960","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-06-29","TCGA-19-5960-10A","GBM",FALSE,FALSE
+"TCGA-27-1832","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-03-25","TCGA-27-1832-10A","GBM",FALSE,FALSE
+"TCGA-06-0132","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-03-17","TCGA-06-0132-10A","GBM",FALSE,FALSE
+"TCGA-06-0137","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-03-13","TCGA-06-0137-10A","GBM",FALSE,FALSE
+"TCGA-19-2629","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-03-10","TCGA-19-2629-10A","GBM",TRUE,FALSE
+"TCGA-06-0184","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2011-03-07","TCGA-06-0184-10B","GBM",FALSE,FALSE
+"TCGA-19-2629","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2010-09-14","TCGA-19-2629-10A","GBM",TRUE,TRUE
+"TCGA-12-3651","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2010-08-30","TCGA-12-3651-10A","GBM",TRUE,FALSE
+"TCGA-12-1089","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2010-02-12","TCGA-12-1089-10C","GBM",TRUE,FALSE
+"TCGA-19-1788","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2009-11-30","TCGA-19-1788-10A","GBM",TRUE,FALSE
+"TCGA-27-1832","GBM","Custom V2 Exome Bait, 48 RXN X 16 tubes","2009-11-30","TCGA-27-1832-10A","GBM",FALSE,TRUE

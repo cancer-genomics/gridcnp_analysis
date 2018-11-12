@@ -55,6 +55,7 @@ cnr <- data.frame(chromosome = as.character(seqnames(cnr)),
                   type = cnr$type)
 cnr$chromosome <- factor(cnr$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
 
+### WXS segments
 cns <- readRDS(file.path(segDir, seg.file))
 cns <- keepSeqlevels(cns, c(paste0("chr", seq(1,22,1)), "chrX", "chrY"), pruning.mode = "coarse")
 
@@ -65,19 +66,31 @@ cns <- data.frame(chromosome = as.character(seqnames(cns)),
                   end = end(ranges(cns)),  
                   log2 = cns$seg.mean)
 cns$chromosome <- factor(cns$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
+cns$type <- rep("JFKit", nrow(cns))
 
-purity <- "N/A"
+### WGS segments
+wgsSegDir <- "/dcl01/scharpf1/data/gridcnp_analysis/tcga_wgs_segs"
+cns.wgs <- readRDS(file.path(wgsSegDir, seg.file))
+cns.wgs <- keepSeqlevels(cns.wgs, c(paste0("chr", seq(1,22,1)), "chrX", "chrY"), pruning.mode = "coarse")
+
+
+cns.wgs <- data.frame(chromosome = as.character(seqnames(cns.wgs)), 
+                  start = start(ranges(cns.wgs)),  
+                  end = end(ranges(cns.wgs)),  
+                  log2 = cns.wgs$seg.mean)
+cns.wgs$chromosome <- factor(cns.wgs$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
+cns.wgs$type <- rep("SNP6", nrow(cns.wgs))
+cns <- rbind(cns, cns.wgs)
+
 sample <- gsub(".rds", "", seg.file)
-
 
 p <-
     ggplot() + 
     geom_point(data = cnr, 
-               aes(x = (start+end)/2, y = log2, color = type), 
+               aes(x = (start+end)/2, y = log2), 
                alpha = 0.2, size = 0.3) +
     geom_segment(data = cns, 
-                 aes(x = start, xend = end, y = log2, yend = log2), 
-                 color = "black") +
+                 aes(x = start, xend = end, y = log2, yend = log2, color = type)) +
     geom_rect(data = plot.info.centromeres, 
               aes(xmin = start, xmax = end, ymin = -3, ymax = 3), 
               fill = "pink", alpha = 0.8) + 

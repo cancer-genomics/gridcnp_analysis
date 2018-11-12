@@ -44,6 +44,8 @@ cnr <- data.frame(chromosome = as.character(seqnames(cnr)),
                   type = cnr$type)
 cnr$chromosome <- factor(cnr$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
 
+### Targeted segments
+
 cns <- readRDS(file.path(segDir, seg.file))
 cns <- keepSeqlevels(cns, c(paste0("chr", seq(1,22,1)), "chrX", "chrY"), pruning.mode = "coarse")
 
@@ -53,20 +55,32 @@ cns <- data.frame(chromosome = as.character(seqnames(cns)),
                   start = start(ranges(cns)),  
                   end = end(ranges(cns)),  
                   log2 = cns$seg.mean)
-cns$chromosome <- factor(cns$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
-
-purity <- "N/A"
+cns$type <- rep("JFKit", nrow(cns))
+### WGS segments
+### WGS segments
+wgsSegDir <- "/dcl01/scharpf1/data/gridcnp_analysis/vv_crc/wgs/segments"
 sample <- str_extract(seg.file, "PGDX[0-9]{1,}T")
+cns.wgs <- readRDS(file.path(wgsSegDir, paste0(sample, "_WGS_eland_processed.rds")))
+cns.wgs <- keepSeqlevels(cns.wgs, c(paste0("chr", seq(1,22,1)), "chrX", "chrY"), pruning.mode = "coarse")
 
+
+cns.wgs <- data.frame(chromosome = as.character(seqnames(cns.wgs)), 
+                      start = start(ranges(cns.wgs)),  
+                      end = end(ranges(cns.wgs)),  
+                      log2 = cns.wgs$seg.mean)
+cns.wgs$chromosome <- factor(cns.wgs$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
+cns.wgs$type <- rep("WGS", nrow(cns.wgs))
+cns <- rbind(cns, cns.wgs)
+cns$chromosome <- factor(cns$chromosome, levels = c(paste0("chr", seq(1, 22, 1)), "chrX", "chrY"))
 
 p <-
     ggplot() + 
     geom_point(data = cnr, 
-               aes(x = (start+end)/2, y = log2, color = type), 
-               alpha = 0.4, size = 0.3) +
+               aes(x = (start+end)/2, y = log2), 
+               alpha = 0.3, size = 0.2,
+               color = "grey66") +
     geom_segment(data = cns, 
-                 aes(x = start, xend = end, y = log2, yend = log2), 
-                 color = "black") +
+                 aes(x = start, xend = end, y = log2, yend = log2, color = type)) +
     geom_rect(data = plot.info.centromeres, 
               aes(xmin = start, xmax = end, ymin = -3, ymax = 3), 
               fill = "pink", alpha = 0.8) + 
@@ -76,7 +90,7 @@ p <-
     ylab("log2R") + 
     xlab("Coordinate") + 
     ylim(-2.5, 2.5) +
-    ggtitle(label = paste(sample, ": segmented log2R (Purity = ", purity, ") --JFKit/segmentr", sep = "")) +
+    ggtitle(label = paste(sample, ": segmented log2R --JFKit/segmentr", sep = "")) +
     theme(plot.title = element_text(face = c("italic", "bold"), family = "Times", colour = "saddlebrown"))
 plot.dir <- "../../visualizations/vv_crc_segments"
 if(!dir.exists(plot.dir)){
